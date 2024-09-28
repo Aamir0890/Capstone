@@ -1,25 +1,44 @@
-module.exports = (sequelize, DataTypes) => {
-    const Folder = sequelize.define('Folder', {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      userId: { // Foreign key to associate with User
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users', // Name of the User table
-          key: 'id'
-        }
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
+  const Folder = sequelize.define('Folder', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
       }
-    }, {
-      tableName: 'Folders' // Specify the table name if different
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    }
+  }, {
+    tableName: 'Folders',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  });
+
+  Folder.associate = (models) => {
+    Folder.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
     });
-  
-    return Folder;
+    Folder.hasMany(models.File, {
+      foreignKey: 'folderId',
+      onDelete: 'CASCADE'
+    });
   };
+
+  return Folder;
+};

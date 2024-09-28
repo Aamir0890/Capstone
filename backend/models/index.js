@@ -13,6 +13,7 @@ db.models = {};
 // Import models
 db.models.User = require('./user')(sequelize, Sequelize.DataTypes);
 db.models.Folder = require('./folder')(sequelize, Sequelize.DataTypes);
+db.models.File = require('./file')(sequelize, Sequelize.DataTypes);
 
 
 Object.keys(db.models).forEach(modelName => {

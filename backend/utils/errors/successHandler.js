@@ -19,6 +19,13 @@ class SuccessHandler {
     static noContent(res, message = 'No content') {
         return res.status(204).send();
     }
+    static ok(res, data, message = 'Success') {
+        return res.status(200).json({
+            success: true,
+            message: message,
+            data: data,
+        });
+    }
 
     // You can add more methods if needed
 }
